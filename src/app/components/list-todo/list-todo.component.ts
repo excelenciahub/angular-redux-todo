@@ -1,19 +1,27 @@
 import { NgRedux, select } from '@angular-redux/store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IAppState } from 'src/app/store/store';
-import { REMOVE_TODO, SAVE_TODO, TOGGLE_TODO, EDIT_TODO } from '../../store/actions/todo-action';
-import { Todo } from 'src/app/models/todo';
+import { Component, OnInit } from '@angular/core';
 import { GlobalConstants } from 'src/app/models/global-constant';
+import { Todo } from 'src/app/models/todo';
+import { IAppState } from 'src/app/store/store';
+import { EDIT_TODO, REMOVE_TODO, TOGGLE_TODO, VISIBILITY_FILTER } from '../../store/actions/todo-action';
 
+import { TODO_FILTER } from '../../models/todo-filter';
 
 @Component({
   selector: 'app-list-todo',
   templateUrl: './list-todo.component.html',
   styleUrls: ['./list-todo.component.scss']
 })
-export class ListTodoComponent implements OnInit, OnDestroy {
+export class ListTodoComponent implements OnInit {
 
   @select() todos;
+
+  allTotos: Todo[] = [];
+  todoList: Todo[] = [];
+
+  todoFilter = TODO_FILTER;
+
+  selectedFilter = TODO_FILTER.ALL;
 
   constructor(
     private ngRedux: NgRedux<IAppState>
@@ -22,8 +30,21 @@ export class ListTodoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.todos.subscribe(todoList => {
-      this.saveData(todoList)
+      this.allTotos = todoList;
+      this.todoList = this.filterData();
+      this.saveData(this.allTotos);
     })
+  }
+
+  filterData() {
+    switch (this.selectedFilter) {
+      case this.todoFilter.COMPLETED:
+        return this.allTotos.filter(t => t.completed === true);
+      case this.todoFilter.INCOMPLETE:
+        return this.allTotos.filter(t => t.completed === false);
+      default:
+        return this.allTotos;
+    }
   }
 
   saveData(todoList: Todo[]) {
@@ -42,8 +63,7 @@ export class ListTodoComponent implements OnInit, OnDestroy {
     this.ngRedux.dispatch({ type: EDIT_TODO, todo: todo });
   }
 
-  ngOnDestroy() {
-    this.ngRedux.dispatch({ type: SAVE_TODO, id: 0 });
+  changeFilter() {
+    this.ngRedux.dispatch({ type: VISIBILITY_FILTER, filter: this.selectedFilter });
   }
-
 }

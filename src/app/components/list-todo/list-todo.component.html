@@ -3,6 +3,15 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Todo</h3>
+                <div>
+                    <div class="form-check" *ngFor="let filter of todoFilter | keyvalue">
+                        <input class="form-check-input" [value]="filter.key" type="radio" [id]="filter.key"
+                            value="option1" [(ngModel)]="selectedFilter" (change)="changeFilter()">
+                        <label class="form-check-label" [for]="filter.key">
+                            {{filter.value}}
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -14,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let todo of todos | async">
+                            <tr *ngFor="let todo of todoList">
                                 <td><span [ngClass]="todo.completed === true ? 'completed': ''"
                                         (click)="toggleTodo(todo)">{{todo.name}}</span></td>
                                 <td><span (click)="removeTodo(todo)"> Delete</span></td>
