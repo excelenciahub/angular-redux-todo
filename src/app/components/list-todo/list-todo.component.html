@@ -26,8 +26,8 @@
                             <tr *ngFor="let todo of todoList">
                                 <td><span [ngClass]="todo.completed === true ? 'completed': ''"
                                         (click)="toggleTodo(todo)">{{todo.name}}</span></td>
-                                <td><span (click)="removeTodo(todo)"> Delete</span></td>
-                                <td><span (click)="editTodo(todo)"> Edit</span></td>
+                                <td><span (click)="removeTodo(todo)"> Delete</span> <span (click)="editTodo(todo)">
+                                        Edit</span></td>
                             </tr>
                         </tbody>
                     </table>
