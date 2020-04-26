@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-4">
+        <form [formGroup]="todoForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="name" formControlName="name" placeholder="Todo">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary input-group-text">
+                            {{f.id.value ? "Update" : "Add"}}
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="isFormSubmitted && f.name.errors" class="mb-2 text-danger">
+                    <div *ngIf="f.name.errors.required">
+                        Name is required
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
